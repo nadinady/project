@@ -15,13 +15,8 @@ public class AppTest
     public void getAllMethods ()
     { Response response;
         Map<String,String> result;
-       response = RestAssured
-                .given().log().all()
-                .get("https://swapi.dev/api/");
-                response
-                       .then()
-                        //.log().body()
-                        .statusCode(200);
+       response = getResponse("https://swapi.dev/api/");
+       checkResponse(response);
         //String responseBody= response.getBody().asString();
         //System.out.println(responseBody);
         JsonPath jsonPath= response.jsonPath();
@@ -35,13 +30,8 @@ public class AppTest
     public void getFilmInfo ()
     { Response response;
         Map<String,String> result;
-        response = RestAssured
-                .given().log().all()
-                .get("https://swapi.dev/api/films");
-        response
-                .then()
-                //.log().body()
-                .statusCode(200);
+        response = getResponse("https://swapi.dev/api/films");
+        checkResponse(response);
         JsonPath jsonPath= response.jsonPath();
         System.out.println("\n\n"+ jsonPath.getList("results.title") + "\n\n");
         result = jsonPath.getMap("results[3]");
@@ -57,28 +47,29 @@ public class AppTest
         Response responsePlanet;
         List<String> planet;
         Map<String,String> result;
-        responseFilms = RestAssured
-                .given().log().all()
-                .get("https://swapi.dev/api/films");
-        responseFilms
-                .then()
-                //.log().body()
-                .statusCode(200);
+        responseFilms = getResponse("https://swapi.dev/api/films");
+        checkResponse(responseFilms);
         JsonPath jsonPath= responseFilms.jsonPath();
         planet = jsonPath.getList("results[3].planets");
-        responsePlanet = RestAssured
-                .given().log().all()
-                .get(planet.get(0));
-        responsePlanet
-                .then()
-                //.log().body()
-                .statusCode(200);
+        responsePlanet = getResponse(planet.get(0));
+        checkResponse(responsePlanet);
         JsonPath jsonPathPlanet= responsePlanet.jsonPath();
         System.out.println(planet + "\n");
         result = jsonPathPlanet.getMap("");
         for (Map.Entry element: result.entrySet()) {
             System.out.println(element);
         }
+    }
+    public Response getResponse(String url) {
+        return  RestAssured
+                .given().log().all()
+                .get(url);
+    }
+    void checkResponse (Response response) {
+        response
+                .then()
+                //.log().body()
+                .statusCode(200);
     }
 
 }
