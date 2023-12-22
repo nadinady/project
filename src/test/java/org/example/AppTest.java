@@ -25,7 +25,7 @@ public class AppTest
         JsonPath jsonPath= response.jsonPath();
         System.out.println(jsonPath.getString("$"));
     }
-    // Получить список фильмов (films) и информацию по одному фильму
+    // Получить список фильмов (films) и информацию по одному фильму2
     @Test
     public void getFilmInfo ()
     { Response response;
